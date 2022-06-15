@@ -1,3 +1,3 @@
-# cotact-us-tutorial1
+# Contact Us Tuorial part 1
 Contact us tutorial
 http://www.osolsolutions.in/
