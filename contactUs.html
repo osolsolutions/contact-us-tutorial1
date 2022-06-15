@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Contact Us with Material Design Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!--  Material I cons from Google Fonts. -->
+   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+
+<div class="container">
+  <h1>Contact Us with Material Design</h1>
+  <p>This is some text.</p>
+</div>
+<!-- contact form -->
+  <section class="section container scrollspy" id="contact">
+    <div class="row">
+          <div id="loader"></div>
+      <div class="col s12 l5">
+        <h2 class="indigo-text text-darken-4">Get in Touch</h2>
+        <p>Share the details of your project – like scope, </p>
+        <p>Timeframes, or business challenges you'd like to solve. </p>
+        <p>Our team will carefully study them and then we’ll figure out the next move together.</p>
+        <p>No matter how complex, we will find the best solution and complete it within a fixed time.</p>
+      </div>
+      <div  class="col s12 l5 offset-l2  ">
+
+            <form name="contactForm" id="contactForm" action="contactUs.php" method="post" enctype="multipart/form-data">
+              <div class="input-field">
+                <i class="material-icons prefix">email</i>
+                <input type="email" name="email" id="email" required>
+                <label for="email">Your Email</label>
+              </div>
+              <div class="input-field">
+                <i class="material-icons prefix">message</i>
+                <textarea name="message" id="message" class="materialize-textarea" cols="20" rows="20"  required></textarea>
+                <label for="message">Your Message</label>
+              </div>
+              <div class="input-field">
+                <i class="material-icons prefix">date_range</i>
+                <input name="date" type="text" id="date" class="datepicker">
+                <label for="date">Choose a date you would like to chat...</label>
+              </div>
+              <div class="input-field">
+                <p>Services required:</p>
+                <p>
+                  <label>
+                    <input name="contactFor[]" value="Mobile App Development" type="checkbox">
+                    <span>Mobile App Development</span>
+                  </label>
+                </p>
+                <p>
+                  <label>
+                    <input name="contactFor[]" value="Web Solutions" type="checkbox">
+                    <span>Web Solutions</span>
+                  </label>
+                </p>
+
+              </div>
+              <div class="input-field center">
+                <button type="submit" id="contactSubmit"  class="btn waves-effect waves-light">Submit</button>
+              </div>
+            </form>
+
+      </div>
+    </div>
+  </section>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+</body>
+</html>
