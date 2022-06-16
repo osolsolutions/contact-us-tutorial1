@@ -85,7 +85,7 @@ function submitContactUS()
   .then((responseJson) => console.log(responseJson))
 }).catch(error => console.log(error));
 	  */
-	preloader.style.display = "block";  
+	preloaderInst.show(); 
 	let formBody = prepareFormBody(data);
 	  //window.location.origin + 
     fetch("contactUs.php", {
@@ -106,7 +106,7 @@ function submitContactUS()
               ")",
             displayLength: 2000, classes: 'rounded red'
           });
-		  preloader.style.display = "none";
+		  preloaderInst.hide();
           return;
         }
         response.json().then(function(data) {
@@ -116,7 +116,7 @@ function submitContactUS()
           } else {
             M.toast({ html: data.message, displayLength: 2000 , classes: 'rounded red'});
           }
-		  preloader.style.display = "none";
+		  preloaderInst.hide();
         });
       })
       .catch(function(error) {
@@ -125,41 +125,55 @@ function submitContactUS()
           displayLength: 2000
         });
         console.log("Fetch error: " + error);
-		preloader.style.display = "none";
+		preloaderInst.hide();
       }); // end fetch
   } // end else
 }
 
-var preloader,loaderContainer,locationContainerHeight,locationContainerWidth;
-function reportWindowSize() {
-  //preloader = document.querySelector("#preloader");
-  let viewPortHeight = window.innerHeight;
-  let viewPortWidth = window.innerWidth;
-  preloader.style.height = viewPortHeight + "px";
-  
-  loaderContainer.style.top = ((viewPortHeight-locationContainerHeight)/2) + "px";
-  loaderContainer.style.left = ((viewPortWidth-locationContainerWidth)/2) + "px";
-  //console.log("loaderContainer.style.top is " + loaderContainer.style.top)
-  //console.log("loaderContainer.style.left is " + loaderContainer.style.left)
+//var preloader,loaderContainer,locationContainerHeight,locationContainerWidth;
+
+var preloaderInst;
+    //after window is loaded completely 
+window.onload = function(){
+	preloader = document.querySelector("#preloader");
+	
+	preloaderInst =  new OSOLpreloader();
+	preloaderInst.init();
+	preloaderInst.adjustOnWindowResize();
+	preloaderInst.hide();
+	
+	var submit_btn = document.getElementById("contactSubmit");
+
+	submit_btn.addEventListener("click", function(){submitContactUS()}); // end click
 }
 
-    //after window is loaded completely 
-    window.onload = function(){
-		preloader = document.querySelector("#preloader");
-		loaderContainer = document.querySelector(".loaderContainer");
-		locationContainerHeight = loaderContainer.offsetHeight;
-		locationContainerWidth = loaderContainer.offsetWidth;
-        //hide the preloader
-        preloader.style.display = "none";
-		//let viewPortHeight = window.innerHeight;//document.querySelector("#contactUSContainer").offsetHeight;
-		//console.log("viewPortHeight is " + viewPortHeight)
-		//console.log("locationContainerHeight is " + locationContainerHeight)
-		//console.log("locationContainerWidth is " + locationContainerWidth)
-		//preloader.style.height = viewPortHeight + "px";
-		reportWindowSize();
-		var submit_btn = document.getElementById("contactSubmit");
+window.onresize = function(){preloaderInst.adjustOnWindowResize()};
 
-		submit_btn.addEventListener("click", function(){submitContactUS()}); // end click
-    }
-
-window.onresize = reportWindowSize;
+class OSOLpreloader{
+	init()
+	{
+		this.preloader = document.querySelector("#preloader");
+		this.loaderContainer = document.querySelector(".loaderContainer");
+		this.locationContainerHeight = this.loaderContainer.offsetHeight;
+		this.locationContainerWidth = this.loaderContainer.offsetWidth;
+	}
+	adjustOnWindowResize() {
+		  //preloader = document.querySelector("#preloader");
+		  let viewPortHeight = window.innerHeight;
+		  let viewPortWidth = window.innerWidth;
+		  this.preloader.style.height = viewPortHeight + "px";
+		  
+		  this.loaderContainer.style.top = ((viewPortHeight-this.locationContainerHeight)/2) + "px";
+		  this.loaderContainer.style.left = ((viewPortWidth-this.locationContainerWidth)/2) + "px";
+		  //console.log("loaderContainer.style.top is " + loaderContainer.style.top)
+		  //console.log("loaderContainer.style.left is " + loaderContainer.style.left)
+	}
+	 show()
+	{
+		this.preloader.style.display = "block";
+	}
+	 hide()
+	{
+		this.preloader.style.display = "none";
+	}
+}
