@@ -10,18 +10,19 @@ Class contactUsHandler{
 	private $senderEmail = "";
 	private $OSOL_PHPMailer_CONFIG;
 	protected function validate(){
-		
+		//$_POST = json_decode(file_get_contents('php://input'));
+		//die('{"status":"Error","message":"'. print_r($_POST,true).'"}');
 		$this->senderEmail = isset($_POST['email'])?$_POST['email']:"";
 		$postedMessage = isset($_POST['message'])?$_POST['message']:"";
 		$dateSelected = isset($_POST['date'])?$_POST['date']:"";
 		if(trim($this->senderEmail) == "" || !$this->valid_email($this->senderEmail))
 		{
-			$this->output2Display = '{"status":"Error","mesage":"You should enter a valid email address"}';
+			$this->output2Display = '{"status":"Error","message":"You should enter a valid email address. '. $this->senderEmail . '"}';
 			return false;
 		}
 		if(trim($postedMessage) == "")
 		{
-			$this->output2Display = '{"status":"Error","mesage":"Message should not be empty"}';
+			$this->output2Display = '{"status":"Error","message":"Message should not be empty"}';
 			return false;
 		}
 
@@ -54,9 +55,10 @@ Class contactUsHandler{
                             'htmlContentDir' => __DIR__."/emailTemplates",// folder where hmtl template is saved
                             );	
 		
+		
 	}
 	protected function execute(){
-		
+		//die(print_r($this->OSOL_PHPMailer_CONFIG,true)."<hr />". print_r($_POST,true));
 		//Create a new PHPMailer instance
 		$mail = new PHPMailer;
 		//Tell PHPMailer to use SMTP
