@@ -39,11 +39,13 @@ function validateEmail(email) {
       return true;
     }
   }
+  
 
-var submit_btn = document.getElementById("contactSubmit");
+  
 
-submit_btn.addEventListener("click", function() {
-  var data = {
+function submitContactUS()
+{
+	var data = {
     email: document.getElementById("email").value.trim(),
     message: document.getElementById("message").value.trim(),
     //keystring: document.getElementById("keystring").value.trim()
@@ -83,7 +85,7 @@ submit_btn.addEventListener("click", function() {
   .then((responseJson) => console.log(responseJson))
 }).catch(error => console.log(error));
 	  */
-	  
+	preloader.style.display = "block";  
 	let formBody = prepareFormBody(data);
 	  //window.location.origin + 
     fetch("contactUs.php", {
@@ -104,6 +106,7 @@ submit_btn.addEventListener("click", function() {
               ")",
             displayLength: 2000, classes: 'rounded red'
           });
+		  preloader.style.display = "none";
           return;
         }
         response.json().then(function(data) {
@@ -113,6 +116,7 @@ submit_btn.addEventListener("click", function() {
           } else {
             M.toast({ html: data.message, displayLength: 2000 , classes: 'rounded red'});
           }
+		  preloader.style.display = "none";
         });
       })
       .catch(function(error) {
@@ -121,6 +125,41 @@ submit_btn.addEventListener("click", function() {
           displayLength: 2000
         });
         console.log("Fetch error: " + error);
+		preloader.style.display = "none";
       }); // end fetch
   } // end else
-}); // end click
+}
+
+var preloader,loaderContainer,locationContainerHeight,locationContainerWidth;
+function reportWindowSize() {
+  //preloader = document.querySelector("#preloader");
+  let viewPortHeight = window.innerHeight;
+  let viewPortWidth = window.innerWidth;
+  preloader.style.height = viewPortHeight + "px";
+  
+  loaderContainer.style.top = ((viewPortHeight-locationContainerHeight)/2) + "px";
+  loaderContainer.style.left = ((viewPortWidth-locationContainerWidth)/2) + "px";
+  //console.log("loaderContainer.style.top is " + loaderContainer.style.top)
+  //console.log("loaderContainer.style.left is " + loaderContainer.style.left)
+}
+
+    //after window is loaded completely 
+    window.onload = function(){
+		preloader = document.querySelector("#preloader");
+		loaderContainer = document.querySelector(".loaderContainer");
+		locationContainerHeight = loaderContainer.offsetHeight;
+		locationContainerWidth = loaderContainer.offsetWidth;
+        //hide the preloader
+        preloader.style.display = "none";
+		//let viewPortHeight = window.innerHeight;//document.querySelector("#contactUSContainer").offsetHeight;
+		//console.log("viewPortHeight is " + viewPortHeight)
+		//console.log("locationContainerHeight is " + locationContainerHeight)
+		//console.log("locationContainerWidth is " + locationContainerWidth)
+		//preloader.style.height = viewPortHeight + "px";
+		reportWindowSize();
+		var submit_btn = document.getElementById("contactSubmit");
+
+		submit_btn.addEventListener("click", function(){submitContactUS()}); // end click
+    }
+
+window.onresize = reportWindowSize;
