@@ -152,10 +152,16 @@ window.onresize = function(){preloaderInst.adjustOnWindowResize()};
 class OSOLpreloader{
 	init()
 	{
-		this.preloader = document.querySelector("#preloader");
-		this.loaderContainer = document.querySelector(".loaderContainer");
-		this.locationContainerHeight = this.loaderContainer.offsetHeight;
-		this.locationContainerWidth = this.loaderContainer.offsetWidth;
+		if(typeof this.initCalled == 'undefined')
+		{
+			this.initCalled = true;
+			this.create();
+			this.preloader = document.querySelector("#preloader");
+			this.loaderContainer = document.querySelector(".loaderContainer");
+			this.locationContainerHeight = this.loaderContainer.offsetHeight;
+			this.locationContainerWidth = this.loaderContainer.offsetWidth;
+		}
+		
 	}
 	adjustOnWindowResize() {
 		  //preloader = document.querySelector("#preloader");
@@ -168,12 +174,79 @@ class OSOLpreloader{
 		  //console.log("loaderContainer.style.top is " + loaderContainer.style.top)
 		  //console.log("loaderContainer.style.left is " + loaderContainer.style.left)
 	}
+	create()
+	{
+		this.addCSS();
+		/*		
+			<!-- <div id="preloader"></div>
+			<div class="loaderContainer">
+			 <div class="loader"></div> 
+			 Please wait while the form is being processed...
+			</div> -->
+		*/
+		var preloaderDiv = document.createElement('div');
+		preloaderDiv.id= "preloader"
+		document.body.appendChild(preloaderDiv);
+		
+		var loaderConainerdiv = document.createElement('div');
+		loaderConainerdiv.className  = "loaderContainer"
+		document.body.appendChild(loaderConainerdiv);
+		
+		var loaderDiv = document.createElement('div');
+		loaderDiv.className = "loader"
+		loaderConainerdiv.appendChild(loaderDiv);
+		
+		const text = document.createTextNode('Please wait while the form is being processed...');
+		loaderConainerdiv.appendChild(text);
+	}
+	addCSS()
+	{
+		var sheet = document.createElement('style')
+		sheet.innerHTML = `
+							#preloader {
+							  width: 100%;
+							  height: 100%;
+							  position: fixed;
+							  top: 0;
+							  left: 0;
+							  z-index: 10;
+							  background: #000;
+							  opacity: 0.5;  /* Opacity for Modern Browsers */
+								filter: alpha(opacity=50);  /* Opacity for IE8 and lower */
+								zoom: 1;  /* Fix for IE7 */
+							  
+							}
+							.loaderContainer{
+							  position: fixed;
+							  width: 120px;
+							  height: 150px;
+							  color:#ccc;
+							  
+							}
+							.loader {
+							  border: 16px solid #f3f3f3; /* Light grey */
+							  border-top: 16px solid #3498db; /* Blue */
+							  border-radius: 50%;
+							  width: 120px;
+							  height: 120px;
+							  animation: spin 2s linear infinite;
+							}
+
+							@keyframes spin {
+							  0% { transform: rotate(0deg); }
+							  100% { transform: rotate(360deg); }
+							}
+							`;
+		document.body.appendChild(sheet);
+	}
 	 show()
 	{
 		this.preloader.style.display = "block";
+		this.loaderContainer.style.display = "block";
 	}
 	 hide()
 	{
-		this.preloader.style.display = "none";
+		/* this.preloader.style.display = "none";
+		this.loaderContainer.style.display = "none"; */
 	}
 }
