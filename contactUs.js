@@ -172,6 +172,31 @@ class ContactUs extends BasicFormOps {
         });
 
     }//post2backend();
+	enableFileDragDrop()
+	{
+			// dragover and dragenter events need to have 'preventDefault' called
+            // in order for the 'drop' event to register. 
+            // See: https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Drag_operations#droptargets
+            let dropContainer = document.getElementById("dropContainer");
+            let fileInput = document.getElementById("fileToUpload");
+
+            dropContainer.ondragover = dropContainer.ondragenter = function(evt) {
+              evt.preventDefault();
+            };
+
+            dropContainer.ondrop = function(evt) {
+              // pretty simple -- but not for IE :(
+              fileInput.files = evt.dataTransfer.files;
+
+              /* // If you want to use some of the dropped files
+              const dT = new DataTransfer();
+              dT.items.add(evt.dataTransfer.files[0]);
+              dT.items.add(evt.dataTransfer.files[3]);
+              fileInput.files = dT.files; */
+
+              evt.preventDefault();
+            };
+	}
         
 
   }//class ContactUs extends BasicFormOps
@@ -189,6 +214,7 @@ window.onload = function(){
 	submit_btn.addEventListener("click", function(){submitContactUS()}); // end click */
 	var contactus = new ContactUs();
 	  //contactus.prefillForm();
+	  contactus.enableFileDragDrop();
 	  var submit_btn = document.getElementById("contactSubmit");
 
 	  submit_btn.addEventListener("click", function(e) {

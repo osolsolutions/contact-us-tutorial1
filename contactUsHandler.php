@@ -45,6 +45,10 @@ Class contactUsHandler{
 		{
 			$this->messageBody .= "Attachment : ".$_FILES['fileToUpload']['name']."<br/>";
 		}//if(isset($_POST['contactFor']) && count($_POST['contactFor'])>0)
+		if(isset($_FILES['fileToUpload']) && isset($_FILES['fileToUpload']['name']))
+		{
+			$this->messageBody .= "Attachment : ".$_FILES['fileToUpload']['name']."<br/>";
+		}//if(isset($_POST['contactFor']) && count($_POST['contactFor'])>0)
 		return true;
 		
 	}
@@ -101,6 +105,12 @@ Class contactUsHandler{
 		$mail->msgHTML(str_replace("__MAIL_CONTENT__",$this->messageBody,file_get_contents($htmlContentDir.'/emailTemplate.html')),$htmlContentDir );
 		//Replace the plain text body with one created manually
 		$mail->AltBody = ($this->messageBody.'This is a plain-text message body'). str_replace("<br />","\r\n",$this->messageBody);
+		
+		if(isset($_FILES['fileToUpload']) && isset($_FILES['fileToUpload']['tmp_name']))
+		{
+			$mail->addAttachment($_FILES['fileToUpload']['tmp_name'],$_FILES['fileToUpload']['name']);
+		}//if(isset($_FILES['fileToUpload']) && isset($_FILES['fileToUpload']['tmp_name']))
+	
 		if (!$mail->send()) {
 			//echo 'Mailer Error: '. $mail->ErrorInfo;
 			$this->output2Display = "{\"status\":\"Error\",\"message\":\"".addslashes($mail->ErrorInfo)."\"}";

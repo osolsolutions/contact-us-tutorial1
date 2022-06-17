@@ -1,4 +1,4 @@
-# Contact Us Tuorial part 4
+# Contact Us Tutorial part 5
 ### Author
 
 Name: Sreekanth Dayanand, www.outsource-online.net
@@ -12,7 +12,7 @@ Contact Us Tuorial part 4
 
 ## Description
 
-*Adding JS Validation code ,AJAX submit and Captcha*
+*Adding File Upload & attach to mail plus JS Validation code ,AJAX submit and Captcha*
 
 This is the fourth in the series of making a simple contact form. Details can be found here
 http://www.outsource-online.net/blog/2022/06/08/setting-up-a-basic-contact-us-form-for-your-site/
@@ -47,6 +47,11 @@ license see http://www.gnu.org/licenses/gpl-3.0.html  GNU/GPLv3. You can use, re
 Email: info@osolsolutions.in
 Url: http://www.outsource-online.net
 Url: http://www.osolsolutions.in
+
+## Changes from tutorial 4
+1. file field added to form
+2. js code added to drag and drop file
+3. contactUsHandler class updated to receive upload and attach file to mail.
 
 
 ## More to come
