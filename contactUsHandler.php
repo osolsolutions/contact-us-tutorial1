@@ -12,6 +12,15 @@ Class contactUsHandler{
 	protected function validate(){
 		//$_POST = json_decode(file_get_contents('php://input'));
 		//die('{"status":"Error","message":"'. print_r($_POST,true).'"}');
+		$this->requestedAction = isset($_GET['action'])?$_GET['action']:"";
+		if($this->requestedAction == 'displayCaptcha')$this->displayCaptcha();
+		
+		$this->keystring = isset($_POST['keystring'])?$_POST['keystring']:"";
+		if($this->keystring != $_SESSION['OSOLmulticaptcha_keystring'])
+		{
+			$this->output2Display = '{"status":"Error","message":"Invalid Captcha(Security Text)"}';
+			return false;
+		}//if(trim($postedMessage) == "")
 		$this->senderEmail = isset($_POST['email'])?$_POST['email']:"";
 		$postedMessage = isset($_POST['message'])?$_POST['message']:"";
 		$dateSelected = isset($_POST['date'])?$_POST['date']:"";
@@ -94,7 +103,7 @@ Class contactUsHandler{
 		$mail->AltBody = ($this->messageBody.'This is a plain-text message body'). str_replace("<br />","\r\n",$this->messageBody);
 		if (!$mail->send()) {
 			//echo 'Mailer Error: '. $mail->ErrorInfo;
-			$this->output2Display = "{\"status\":\"error\",\"message\":\"".addslashes($mail->ErrorInfo)."\"}";
+			$this->output2Display = "{\"status\":\"Error\",\"message\":\"".addslashes($mail->ErrorInfo)."\"}";
 			return false;
 		} else {
 			$this->output2Display = ('{"status":"Success"}');
@@ -121,6 +130,14 @@ Class contactUsHandler{
 	// helper methods
 	protected function valid_email($str) {
         return (!preg_match("/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix", $str)) ? FALSE : TRUE;
+	}
+	
+	protected function displayCaptcha()
+	{
+		$captcha = new \OSOLUtils\Helpers\OSOLmulticaptcha();
+		$captcha->displayCaptcha();
+		$_SESSION['OSOLmulticaptcha_keystring'] = $captcha->keystring;
+		exit;
 	}
 }
 
