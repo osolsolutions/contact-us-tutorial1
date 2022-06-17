@@ -9,7 +9,6 @@ http://www.outsource-online.net/blog/2022/06/08/setting-up-a-basic-contact-us-fo
 
 3. Add Captcha
 4. Add File Upload feature
-5. Post with AJAX and captcha
 
 http://www.outsource-online.net/ is a site managed by http://www.osolsolutions.in/
 
