@@ -181,21 +181,25 @@ Class contactUsHandler{
 		//die(json_encode($var2Display));
 		//header("Content-Type: image/x-png");
 		$tempFileName2SaveImg = $this->OSOL_Captcha_CONFIG['tempImagesFolder']."/".$captchaString."-".time(). ".png";
-		//die($tempFileName2SaleImg);
-		//$fileResource = fopen($tempFileName2SaveImg,"w");
-		imagepng($captchaImgObj,$tempFileName2SaveImg, 0, NULL);
-		/* $jpeg_quality = 90;
-		imagejpeg($captchaImgObj, $tempFileName2SaveImg, $jpeg_quality) or 
-					die('Cannot Initialize new GD image stream'); */
-		//die('tempFileName2SaveImg is ' . file_get_contents($tempFileName2SaveImg));
-		$var2Display->imageContent = base64_encode(file_get_contents($tempFileName2SaveImg));
+		
+		//imagepng($captchaImgObj,$tempFileName2SaveImg, 0, NULL);
+		//$var2Display->imageContent = base64_encode(file_get_contents($tempFileName2SaveImg));
+		//unlink($tempFileName2SaveImg);
+		
+		
+		ob_start();
+		imagepng($captchaImgObj);
+		$var2Display->imageContent = base64_encode(ob_get_contents());
+		ob_end_clean();
+		
+		
 		//die($var2Display->imageContent);
 		
 		echo(json_encode($var2Display));
 		//echo '{captchaEncypted:"'.$var2Display->captchaEncypted.'",imageContent:"' .base64_encode($var2Display->imageContent). '"}<br /><br />'.$var2Display->imageContent;
 		// Print the HTML tag with the image embedded
 		//echo '<img src="data:image/png;base64,'.base64_encode($var2Display->imageContent).'"/>';
-		unlink($tempFileName2SaveImg);
+		
 
 		exit;
 		
