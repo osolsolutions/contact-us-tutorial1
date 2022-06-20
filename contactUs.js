@@ -197,12 +197,37 @@ class ContactUs extends BasicFormOps {
               evt.preventDefault();
             };
 	}
+	refreshCaptcha()
+	{
+		
+	    var time =  new Date().getTime();
+		var url = 'contactUs.php?action=getCaptchaWithAjax&time='+time;
+		var xhr = new XMLHttpRequest()
+	  
+	  xhr.open('GET', url, true);
+	  xhr.addEventListener('readystatechange', function(e) {
+		if (xhr.readyState == 4 && xhr.status == 200) {
+		  // Done. Inform the user
+                     let xhrResponse = JSON.parse(xhr.responseText);
+					  var captchaEncypted = document.querySelector("#captchaEncypted");
+					  var osolCaptchaImage = document.querySelector("#osolCaptchaImage");
+					  captchaEncypted.value = xhrResponse.captchaEncypted;
+					  osolCaptchaImage.src = "data:image/png;base64," + xhrResponse.imageContent;
+		}
+		else if (xhr.readyState == 4 && xhr.status != 200) {
+		  // Error. Inform the user
+		}
+	  })
+	  
+	  xhr.send(null)
+	 
+	}
         
 
   }//class ContactUs extends BasicFormOps
 //var preloader,loaderContainer,locationContainerHeight,locationContainerWidth;
 
-var preloaderInst;
+var contactus,preloaderInst;
     //after window is loaded completely 
 window.onload = function(){
 	
@@ -212,7 +237,7 @@ window.onload = function(){
 	
 	/* var submit_btn = document.getElementById("contactSubmit");
 	submit_btn.addEventListener("click", function(){submitContactUS()}); // end click */
-	var contactus = new ContactUs();
+	contactus = new ContactUs();
 	  //contactus.prefillForm();
 	  contactus.enableFileDragDrop();
 	  var submit_btn = document.getElementById("contactSubmit");
@@ -221,6 +246,7 @@ window.onload = function(){
 		e.preventDefault();
 		contactus.sendEmail();
 		});
+	contactus.refreshCaptcha();
 }
 
 window.onresize = function(){preloaderInst.adjustOnWindowResize()};

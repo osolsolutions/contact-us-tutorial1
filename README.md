@@ -1,4 +1,4 @@
-# Contact Us Tutorial part 5
+# Contact Us Tutorial part 6
 ### Author
 
 Name: Sreekanth Dayanand, www.outsource-online.net
@@ -12,13 +12,13 @@ Contact Us Tuorial part 4
 
 ## Description
 
-*Adding File Upload & attach to mail plus JS Validation code ,AJAX submit and Captcha*
+*Adding File Upload & attach to mail plus JS Validation code ,AJAX submit and Captcha(without cookie)*
 
 This is the fourth in the series of making a simple contact form. Details can be found here
 http://www.outsource-online.net/blog/2022/06/08/setting-up-a-basic-contact-us-form-for-your-site/
 
 ## Prerequisites
-1. Run `composer require osolutils/helpers`
+1. [Composer](https://getcomposer.org/download/) must be installed `composer require osolutils/helpers`
 2. This is to download [OSOLMutliCaptcha](https://github.com/osolgithub/OSOLMulticaptcha) and [PHPMailer](https://github.com/PHPMailer/PHPMailer) ( without running seperate `composer require phpmailer/phpmailer`)
 
 
@@ -48,10 +48,25 @@ Email: info@osolsolutions.in
 Url: http://www.outsource-online.net
 Url: http://www.osolsolutions.in
 
-## Changes from tutorial 4
-1. file field added to form
-2. js code added to drag and drop file
-3. contactUsHandler class updated to receive upload and attach file to mail.
+## Changes from tutorial 5
+1. contactUs.php 
+	1. commented `session_start();// for captcha`
+2. contactUsHandler class:
+	1. commented `$_SESSION['OSOLmulticaptcha_keystring'] = $captcha->keystring;`
+	2. added $this->OSOL_Captcha_CONFIG 
+	3. encrtypt & decrypt methods added 
+	4. added getCaptchaWithAjax()  which returns json with `captchaEncypted` & `imageContent`
+3. OSOLMulticaptcha.php changed to show given captcha text 
+4. contactUs.html :  in the contact form additional hidden field `captchaEncypted` added.
+5. contactUs.js :
+    1. added refreshCaptcha()
+		1. to handle  ajax which  returns json with `captchaEncypted` & `imageContent` 
+		2. to set hidden field `captchaEncypted` via ajax each time captcha is loaded/refreshed. 
+		3. first time loaded in window.onload
+
+	
+	
+
 
 
 ## More to come

@@ -66,6 +66,7 @@
                 <!-- https://www.outsource-online.net/osolmulticaptcha-simplest-php-captcha-for-html-forms.html -->
                 <div class="input-field right" >
                   <input type="text" name="keystring" id="keystring" style="width:120px;"  required>            
+                  <input type="hidden" name="captchaEncypted" id="captchaEncypted" value="" >            
                   <label for="keystring">Enter security text</label>
                 </div>
                 <div class="valign-wrapper"  ><!--valign-wrapper to vetical center-->
@@ -74,15 +75,13 @@
                   <a href="javascript:refreshCaptcha()" >
                     <i class=" tiny  material-icons">refresh</i>
                   </a>
-                    <img id="osolCaptchaImage" src="contactUs.php?action=displayCaptcha">
+                    <img id="osolCaptchaImage" src=""> <!-- contactUs.php?action=displayCaptcha -->
                 </div> 
                 <script>
                     //alert("Url  ="+document.location + " , PathName  ="+ window.location.pathname + " , url  ="+window.location.href);// Returns full URL
                     function refreshCaptcha(){
-                      var time =  new Date().getTime();
-                      var captchaSrc = 'contactUs.php?action=displayCaptcha&time='+time;
-					  var osolCaptchaImage = document.querySelector("#osolCaptchaImage");
-					  osolCaptchaImage.src = captchaSrc;
+                      
+					  contactus.refreshCaptcha();
                       
                     }//function refreshCaptcha()
                 </script>

@@ -14,13 +14,26 @@ Class contactUsHandler{
 		//die('{"status":"Error","message":"'. print_r($_POST,true).'"}');
 		$this->requestedAction = isset($_GET['action'])?$_GET['action']:"";
 		if($this->requestedAction == 'displayCaptcha')$this->displayCaptcha();
+		if($this->requestedAction == 'getCaptchaWithAjax')$this->getCaptchaWithAjax();
 		
 		$this->keystring = isset($_POST['keystring'])?$_POST['keystring']:"";
-		if($this->keystring != $_SESSION['OSOLmulticaptcha_keystring'])
+		if($this->OSOL_Captcha_CONFIG['withoutSession'])
 		{
-			$this->output2Display = '{"status":"Error","message":"Invalid Captcha(Security Text)"}';
-			return false;
-		}//if(trim($postedMessage) == "")
+			$this->captchaEncypted = isset($_POST['captchaEncypted'])?$_POST['captchaEncypted']:"";
+			if($this->keystring != $this->decryptCaptchaString($this->captchaEncypted))
+			{
+				$this->output2Display = '{"status":"Error","message":"Invalid Captcha(Security Text)"}';
+				return false;
+			}//if(trim($postedMessage) == "")
+		}
+		else
+		{
+			if($this->keystring != $_SESSION['OSOLmulticaptcha_keystring'])
+			{
+				$this->output2Display = '{"status":"Error","message":"Invalid Captcha(Security Text)"}';
+				return false;
+			}//if(trim($postedMessage) == "")
+		}
 		$this->senderEmail = isset($_POST['email'])?$_POST['email']:"";
 		$postedMessage = isset($_POST['message'])?$_POST['message']:"";
 		$dateSelected = isset($_POST['date'])?$_POST['date']:"";
@@ -54,6 +67,12 @@ Class contactUsHandler{
 	}
 	protected function setConfig(){
 		
+		$this->OSOL_Captcha_CONFIG = array(
+									'withoutSession' => true,
+									'captchaEncryptionKey' => 'YourUniqueEncryptionKey',
+									'tempImagesFolder' => __DIR__."/tempImages"
+										
+										);
 		$this->OSOL_PHPMailer_CONFIG = array(
                             'username' => 'username of email',
                             'password' => 'password of email', // app password if it is gmail
@@ -146,8 +165,91 @@ Class contactUsHandler{
 	{
 		$captcha = new \OSOLUtils\Helpers\OSOLmulticaptcha();
 		$captcha->displayCaptcha();
-		$_SESSION['OSOLmulticaptcha_keystring'] = $captcha->keystring;
+		//$_SESSION['OSOLmulticaptcha_keystring'] = $captcha->keystring;
 		exit;
+	}
+	protected function getCaptchaWithAjax() // which returns json with `captchaEncypted` & `imageContent`
+	{
+		$captcha = new \OSOLUtils\Helpers\OSOLmulticaptcha();
+		$returnImgObj = true;
+		$captchaImgObj = $captcha->displayCaptcha($returnImgObj);
+		$var2Display = new stdClass();
+		$captchaString = $captcha->keystring;
+		//$var2Display->captchaString = $captchaString;
+		$var2Display->captchaEncypted = $this->encryptCaptchaString($captchaString);
+		//$var2Display->captchadecypted = $this->decryptCaptchaString($var2Display->captchaEncypted);
+		//die(json_encode($var2Display));
+		//header("Content-Type: image/x-png");
+		$tempFileName2SaveImg = $this->OSOL_Captcha_CONFIG['tempImagesFolder']."/".$captchaString."-".time(). ".png";
+		//die($tempFileName2SaleImg);
+		//$fileResource = fopen($tempFileName2SaveImg,"w");
+		imagepng($captchaImgObj,$tempFileName2SaveImg, 0, NULL);
+		/* $jpeg_quality = 90;
+		imagejpeg($captchaImgObj, $tempFileName2SaveImg, $jpeg_quality) or 
+					die('Cannot Initialize new GD image stream'); */
+		//die('tempFileName2SaveImg is ' . file_get_contents($tempFileName2SaveImg));
+		$var2Display->imageContent = base64_encode(file_get_contents($tempFileName2SaveImg));
+		//die($var2Display->imageContent);
+		
+		echo(json_encode($var2Display));
+		//echo '{captchaEncypted:"'.$var2Display->captchaEncypted.'",imageContent:"' .base64_encode($var2Display->imageContent). '"}<br /><br />'.$var2Display->imageContent;
+		// Print the HTML tag with the image embedded
+		//echo '<img src="data:image/png;base64,'.base64_encode($var2Display->imageContent).'"/>';
+		unlink($tempFileName2SaveImg);
+
+		exit;
+		
+	}
+	protected function encryptCaptchaString($captchaString)
+	{
+		// Store a string into the variable which
+		// need to be Encrypted
+		$simple_string = $captchaString;//"Welcome to GeeksforGeeks\n";
+		  
+		// Display the original string
+		//echo "Original String: " . $simple_string;
+		  
+		// Store the cipher method
+		$ciphering = "AES-128-CTR";
+		  
+		// Use OpenSSl Encryption method
+		$iv_length = openssl_cipher_iv_length($ciphering);
+		$options = 0;
+		  
+		// Non-NULL Initialization Vector for encryption
+		$encryption_iv = '1234567891011121';
+		  
+		// Store the encryption key
+		$encryption_key = $this->OSOL_Captcha_CONFIG['captchaEncryptionKey'];//"GeeksforGeeks";
+		  
+		// Use openssl_encrypt() function to encrypt the data
+		$encryption = openssl_encrypt($simple_string, $ciphering,
+					$encryption_key, $options, $encryption_iv);
+		  
+		// Display the encrypted string
+		//echo "Encrypted String: " . $encryption . "\n";
+		return $encryption;
+	}
+	protected function decryptCaptchaString($captchaString)
+	{
+		$encryption = $captchaString;
+		// Store the cipher method
+		$ciphering = "AES-128-CTR";
+		  
+		// Use OpenSSl Encryption method
+		$iv_length = openssl_cipher_iv_length($ciphering);
+		$options = 0;
+		$encryption = $captchaString;
+		// Non-NULL Initialization Vector for decryption
+		$decryption_iv = '1234567891011121';
+		  
+		// Store the decryption key
+		$decryption_key = $this->OSOL_Captcha_CONFIG['captchaEncryptionKey'];//"GeeksforGeeks";
+		  
+		// Use openssl_decrypt() function to decrypt the data
+		$decryption=openssl_decrypt ($encryption, $ciphering, 
+				$decryption_key, $options, $decryption_iv);
+		return $decryption;
 	}
 }
 
