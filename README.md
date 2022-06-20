@@ -1,4 +1,4 @@
-# Contact Us Tutorial part 6
+# Contact Us Tutorial part 6, Implementing Captcha without Cookie
 ### Author
 
 Name: Sreekanth Dayanand, www.outsource-online.net
@@ -8,23 +8,23 @@ Name: Sreekanth Dayanand, www.outsource-online.net
 This is a solo project.
 
 ## Synopsis
-Contact Us Tuorial part 4
+Contact Us Tuorial part 6
 
 ## Description
 
 *Adding File Upload & attach to mail plus JS Validation code ,AJAX submit and Captcha(without cookie)*
 
-This is the fourth in the series of making a simple contact form. Details can be found here
+This is the sixth in the series of making a simple contact form. Details can be found here
 http://www.outsource-online.net/blog/2022/06/08/setting-up-a-basic-contact-us-form-for-your-site/
 
 ## Prerequisites
-1. [Composer](https://getcomposer.org/download/) must be installed `composer require osolutils/helpers`
+1. [Composer](https://getcomposer.org/download/) must be installed to run `composer require osolutils/helpers`
 2. This is to download [OSOLMutliCaptcha](https://github.com/osolgithub/OSOLMulticaptcha) and [PHPMailer](https://github.com/PHPMailer/PHPMailer) ( without running seperate `composer require phpmailer/phpmailer`)
 
 
 ## Installation
 Step By step installation guide
-1. Clone/Download origin/tutorial4
+1. Clone/Download origin/tutorial6
 2. Run `composer require osolutils/helpers`
 3. Set path of `vendor` folder(of composer classes) correctly in `contactUs.php`
 5. Edit Config `$this->OSOL_PHPMailer_CONFIG`
