@@ -1,4 +1,4 @@
-# Contact Us Tutorial part 6, Implementing Captcha without Cookie
+# Contact Us Tutorial part 6, Implementing Captcha without Cookie(GDPR Compliance)
 ### Author
 
 Name: Sreekanth Dayanand, www.outsource-online.net
@@ -12,14 +12,17 @@ Contact Us Tuorial part 6
 
 ## Description
 
+GDPR Compliant Captcha
+
 *Adding File Upload & attach to mail plus JS Validation code ,AJAX submit and Captcha(without cookie)*
 
 This is the sixth in the series of making a simple contact form. Details can be found here
 http://www.outsource-online.net/blog/2022/06/08/setting-up-a-basic-contact-us-form-for-your-site/
 
 ## Prerequisites
-1. [Composer](https://getcomposer.org/download/) must be installed to run `composer require osolutils/helpers`
-2. This is to download [OSOLMutliCaptcha](https://github.com/osolgithub/OSOLMulticaptcha) and [PHPMailer](https://github.com/PHPMailer/PHPMailer) ( without running seperate `composer require phpmailer/phpmailer`)
+1. [Composer](https://getcomposer.org/download/) must be installed to run `composer require osolutils/helpers`. 
+2. This is to download [OSOL Helper Classes](https://github.com/osolgithub/OSOLHelpers)
+3. Helper classes used in this project are [OSOLMutliCaptcha](https://github.com/osolgithub/OSOLMulticaptcha) and [PHPMailer](https://github.com/PHPMailer/PHPMailer) ( without running seperate `composer require phpmailer/phpmailer`)
 
 
 ## Installation
@@ -54,12 +57,6 @@ Url: http://www.osolsolutions.in
 2. contactUsHandler class:
 	1. commented `$_SESSION['OSOLmulticaptcha_keystring'] = $captcha->keystring;`
 	2. added $this->OSOL_Captcha_CONFIG 
-```
-$this->OSOL_Captcha_CONFIG = array(
-									'withoutSession' => true,
-									'captchaEncryptionKey' => 'YourUniqueEncryptionKey',										
-										);
-```	
 	3. added getCaptchaWithAjax()  which uses encrtypt & decrypt methods of OSOLMutliCaptcha, instead of session 
 	4. getCaptchaWithAjax()  returns json with `captchaEncypted` & `imageContent`
 3. OSOLMulticaptcha.php changed to show given captcha text 
