@@ -59,9 +59,8 @@ Url: http://www.osolsolutions.in
 	2. added $this->OSOL_Captcha_CONFIG 
 	3. added getCaptchaWithAjax()  which uses encrtypt & decrypt methods of OSOLMutliCaptcha, instead of session 
 	4. getCaptchaWithAjax()  returns json with `captchaEncypted` & `imageContent`
-3. OSOLMulticaptcha.php changed to show given captcha text 
-4. contactUs.html :  in the contact form additional hidden field `captchaEncypted` added.
-5. contactUs.js :
+3. contactUs.html :  in the contact form additional hidden field `captchaEncypted` added.
+4. contactUs.js :
     1. added refreshCaptcha()
 		1. to handle  ajax which  returns json with `captchaEncypted` & `imageContent` 
 		2. to set hidden field `captchaEncypted` via ajax each time captcha is loaded/refreshed. 
