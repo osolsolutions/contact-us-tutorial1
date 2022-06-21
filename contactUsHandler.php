@@ -19,12 +19,19 @@ Class contactUsHandler{
 		$this->keystring = isset($_POST['keystring'])?$_POST['keystring']:"";
 		if($this->OSOL_Captcha_CONFIG['withoutSession'])
 		{
-			$this->captchaEncypted = isset($_POST['captchaEncypted'])?$_POST['captchaEncypted']:"";
-			if($this->keystring != $this->decryptCaptchaString($this->captchaEncypted))
+			$captcha = new \OSOLUtils\Helpers\OSOLmulticaptcha();
+			$captchaText2Check = isset($_POST['keystring'])?$_POST['keystring']:"";
+			$encryptedCaptchaString = isset($_POST['captchaEncypted'])?$_POST['captchaEncypted']:"";
+			if(trim($captchaText2Check) != "" && $captcha->isCaptchaCorrect($captchaText2Check, $encryptedCaptchaString))
 			{
+				//chaptcha text entered is correct
+			}
+			else
+			{
+				//chaptcha text entered is not correct
 				$this->output2Display = '{"status":"Error","message":"Invalid Captcha(Security Text)"}';
 				return false;
-			}//if(trim($postedMessage) == "")
+			}
 		}
 		else
 		{
@@ -70,7 +77,6 @@ Class contactUsHandler{
 		$this->OSOL_Captcha_CONFIG = array(
 									'withoutSession' => true,
 									'captchaEncryptionKey' => 'YourUniqueEncryptionKey',
-									'tempImagesFolder' => __DIR__."/tempImages"
 										
 										);
 		$this->OSOL_PHPMailer_CONFIG = array(
@@ -171,90 +177,22 @@ Class contactUsHandler{
 	protected function getCaptchaWithAjax() // which returns json with `captchaEncypted` & `imageContent`
 	{
 		$captcha = new \OSOLUtils\Helpers\OSOLmulticaptcha();
+		$captchaEncryptionKey = $this->OSOL_Captcha_CONFIG['captchaEncryptionKey'];// IMPORTANT ****** YOU MUST SET A CUSTOM VALUE FOR YOUR SITE
+		$captcha->setCaptchaEncryptionKey($captchaEncryptionKey);
 		$returnImgObj = true;
 		$captchaImgObj = $captcha->displayCaptcha($returnImgObj);
-		$var2Display = new stdClass();
-		$captchaString = $captcha->keystring;
-		//$var2Display->captchaString = $captchaString;
-		$var2Display->captchaEncypted = $this->encryptCaptchaString($captchaString);
-		//$var2Display->captchadecypted = $this->decryptCaptchaString($var2Display->captchaEncypted);
-		//die(json_encode($var2Display));
-		//header("Content-Type: image/x-png");
-		$tempFileName2SaveImg = $this->OSOL_Captcha_CONFIG['tempImagesFolder']."/".$captchaString."-".time(). ".png";
-		
-		//imagepng($captchaImgObj,$tempFileName2SaveImg, 0, NULL);
-		//$var2Display->imageContent = base64_encode(file_get_contents($tempFileName2SaveImg));
-		//unlink($tempFileName2SaveImg);
-		
-		
 		ob_start();
 		imagepng($captchaImgObj);
-		$var2Display->imageContent = base64_encode(ob_get_contents());
-		ob_end_clean();
+		$imageContent = ob_get_contents();
+		ob_end_clean(); 
 		
-		
-		//die($var2Display->imageContent);
-		
-		echo(json_encode($var2Display));
-		//echo '{captchaEncypted:"'.$var2Display->captchaEncypted.'",imageContent:"' .base64_encode($var2Display->imageContent). '"}<br /><br />'.$var2Display->imageContent;
-		// Print the HTML tag with the image embedded
-		//echo '<img src="data:image/png;base64,'.base64_encode($var2Display->imageContent).'"/>';
-		
-
-		exit;
+		$var2Display = new stdClass();
+		$var2Display->captchaEncypted = $captcha->getEncryptedCaptchaString();
+		$var2Display->imageContent = base64_encode($imageContent);
+		die(json_encode($var2Display));
 		
 	}
-	protected function encryptCaptchaString($captchaString)
-	{
-		// Store a string into the variable which
-		// need to be Encrypted
-		$simple_string = $captchaString;//"Welcome to GeeksforGeeks\n";
-		  
-		// Display the original string
-		//echo "Original String: " . $simple_string;
-		  
-		// Store the cipher method
-		$ciphering = "AES-128-CTR";
-		  
-		// Use OpenSSl Encryption method
-		$iv_length = openssl_cipher_iv_length($ciphering);
-		$options = 0;
-		  
-		// Non-NULL Initialization Vector for encryption
-		$encryption_iv = '1234567891011121';
-		  
-		// Store the encryption key
-		$encryption_key = $this->OSOL_Captcha_CONFIG['captchaEncryptionKey'];//"GeeksforGeeks";
-		  
-		// Use openssl_encrypt() function to encrypt the data
-		$encryption = openssl_encrypt($simple_string, $ciphering,
-					$encryption_key, $options, $encryption_iv);
-		  
-		// Display the encrypted string
-		//echo "Encrypted String: " . $encryption . "\n";
-		return $encryption;
-	}
-	protected function decryptCaptchaString($captchaString)
-	{
-		$encryption = $captchaString;
-		// Store the cipher method
-		$ciphering = "AES-128-CTR";
-		  
-		// Use OpenSSl Encryption method
-		$iv_length = openssl_cipher_iv_length($ciphering);
-		$options = 0;
-		$encryption = $captchaString;
-		// Non-NULL Initialization Vector for decryption
-		$decryption_iv = '1234567891011121';
-		  
-		// Store the decryption key
-		$decryption_key = $this->OSOL_Captcha_CONFIG['captchaEncryptionKey'];//"GeeksforGeeks";
-		  
-		// Use openssl_decrypt() function to decrypt the data
-		$decryption=openssl_decrypt ($encryption, $ciphering, 
-				$decryption_key, $options, $decryption_iv);
-		return $decryption;
-	}
+	
 }
 
 ?>

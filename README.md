@@ -54,8 +54,14 @@ Url: http://www.osolsolutions.in
 2. contactUsHandler class:
 	1. commented `$_SESSION['OSOLmulticaptcha_keystring'] = $captcha->keystring;`
 	2. added $this->OSOL_Captcha_CONFIG 
-	3. encrtypt & decrypt methods added 
-	4. added getCaptchaWithAjax()  which returns json with `captchaEncypted` & `imageContent`
+```
+$this->OSOL_Captcha_CONFIG = array(
+									'withoutSession' => true,
+									'captchaEncryptionKey' => 'YourUniqueEncryptionKey',										
+										);
+```	
+	3. added getCaptchaWithAjax()  which uses encrtypt & decrypt methods of OSOLMutliCaptcha, instead of session 
+	4. getCaptchaWithAjax()  returns json with `captchaEncypted` & `imageContent`
 3. OSOLMulticaptcha.php changed to show given captcha text 
 4. contactUs.html :  in the contact form additional hidden field `captchaEncypted` added.
 5. contactUs.js :
